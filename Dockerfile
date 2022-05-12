@@ -27,5 +27,7 @@ RUN npm install --only=production
 COPY . .
 
 COPY --from=development /usr/src/app/dist ./dist
+RUN npm install ts-node
+RUN npm run migrate 
 EXPOSE 3000
 CMD ["node", "dist/main"]
