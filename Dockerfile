@@ -13,6 +13,8 @@ COPY . .
 
 RUN npm run build
 
+RUN npm run migrate 
+
 FROM node:12.19.0-alpine3.9 as production
 
 ARG NODE_ENV=production
@@ -27,7 +29,5 @@ RUN npm install --only=production
 COPY . .
 
 COPY --from=development /usr/src/app/dist ./dist
-RUN npm install ts-node
-RUN npm run migrate 
 EXPOSE 3000
 CMD ["node", "dist/main"]
