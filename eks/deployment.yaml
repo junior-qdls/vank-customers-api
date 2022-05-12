@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vank-api-deployment
+  labels:
+    app: vank-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vank-api
+  template:
+    metadata:
+      labels:
+        app: vank-api
+    spec:
+      containers:
+      - name: vank-api
+        image: 291938837414.dkr.ecr.us-east-1.amazonaws.com/vank:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3000
