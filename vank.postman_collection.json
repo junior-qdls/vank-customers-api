@@ -1,0 +1,125 @@
+{
+	"info": {
+		"_postman_id": "a4b76388-bf39-44d7-ae36-ec3e097ecc3b",
+		"name": "vank",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "create customer",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"companyName\": \"company-abc\",\n    \"internalCode\": \"0001\",\n    \"tributaryId\": \"123456789-3\",\n    \"currency\": \"USD\",\n    \"apiQuotaCalls\": 550,\n    \"bankRecords\": [\n        1,\n        2,\n        3\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "a6ce6ec8faa964ff88cd66338f6a70bc-1364678839.us-east-1.elb.amazonaws.com/customers",
+					"host": [
+						"a6ce6ec8faa964ff88cd66338f6a70bc-1364678839",
+						"us-east-1",
+						"elb",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"customers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update customer",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"currency\": \"CLP\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "a6ce6ec8faa964ff88cd66338f6a70bc-1364678839.us-east-1.elb.amazonaws.com/customers/123456789-3",
+					"host": [
+						"a6ce6ec8faa964ff88cd66338f6a70bc-1364678839",
+						"us-east-1",
+						"elb",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"customers",
+						"123456789-3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "search invoices",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "a6ce6ec8faa964ff88cd66338f6a70bc-1364678839.us-east-1.elb.amazonaws.com/invoices/customers/123456789-3?invoice_from_date=2010-04-06&invoice_to_date=2020-04-29",
+					"host": [
+						"a6ce6ec8faa964ff88cd66338f6a70bc-1364678839",
+						"us-east-1",
+						"elb",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"invoices",
+						"customers",
+						"123456789-3"
+					],
+					"query": [
+						{
+							"key": "invoice_from_date",
+							"value": "2010-04-06"
+						},
+						{
+							"key": "invoice_to_date",
+							"value": "2020-04-29"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "sync invoices",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "a6ce6ec8faa964ff88cd66338f6a70bc-1364678839.us-east-1.elb.amazonaws.com/invoices/synchronizations",
+					"host": [
+						"a6ce6ec8faa964ff88cd66338f6a70bc-1364678839",
+						"us-east-1",
+						"elb",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"invoices",
+						"synchronizations"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

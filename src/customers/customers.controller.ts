@@ -1,4 +1,12 @@
-import { Controller, Post, Body, Patch, Param, HttpCode } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Res,
+  HttpStatus,
+} from '@nestjs/common';
 import { CustomersService } from './customers.service';
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { UpdateCustomerDto } from './dto/update-customer.dto';
@@ -7,21 +15,37 @@ import { UpdateCustomerDto } from './dto/update-customer.dto';
 export class CustomersController {
   constructor(private readonly customersService: CustomersService) {}
 
-  @HttpCode(201)
   @Post()
-  async create(@Body() createCustomerDto: CreateCustomerDto) {
-    await this.customersService.create(createCustomerDto);
-    return {
-      message: 'customer created!',
-    };
+  async create(@Res() response, @Body() createCustomerDto: CreateCustomerDto) {
+    try {
+      await this.customersService.create(createCustomerDto);
+      return response.status(HttpStatus.CREATED).send({
+        message: 'customer created!',
+      });
+    } catch (error) {
+      return response.status(HttpStatus.BAD_REQUEST).send({
+        message: error.message,
+      });
+    }
   }
 
-  @HttpCode(200)
-  @Patch(':id')
+  @Patch(':tributaryId')
   async update(
-    @Param('id') id: string,
+    @Res() response,
+    @Param('tributaryId') tributaryId: string,
     @Body() updateCustomerDto: UpdateCustomerDto,
   ) {
-    await this.customersService.update(+id, updateCustomerDto);
+    try {
+      await this.customersService.update(tributaryId, updateCustomerDto);
+      console.log('was updated');
+
+      return response.status(HttpStatus.ACCEPTED).send({
+        message: 'customer updated!',
+      });
+    } catch (error) {
+      return response.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
+        message: error.message,
+      });
+    }
   }
 }

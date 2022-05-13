@@ -23,10 +23,10 @@ export class InvoicesController {
     );
   }
 
-  @Get('customers/:id')
+  @Get('customers/:tributaryId')
   async searchInvoices(
     @Res() response,
-    @Param('id') tributaryId: string,
+    @Param('tributaryId') tributaryId: string,
     @Query('vendor') vendor: string,
     @Query('currency') currency: string,
     @Query('invoice_from_date') invoiceFromDate: string,
@@ -39,7 +39,9 @@ export class InvoicesController {
         invoiceToDate,
         currency,
       });
-      return result;
+      return response.status(HttpStatus.OK).send({
+        invoices: result,
+      });
     } catch (error) {
       return response.status(HttpStatus.BAD_REQUEST).send({
         message: error.message,

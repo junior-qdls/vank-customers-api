@@ -15,7 +15,7 @@ export class CustomerCacheService {
     console.log(`cachedCustomer ${JSON.stringify(cachedCustomer)}`);
     return cachedCustomer
       ? cachedCustomer
-      : this.customerService.findCustomer(tributaryId);
+      : this.customerService.findCustomerFullInfo(tributaryId);
   }
 
   async reduceQuota(tributaryId: string) {

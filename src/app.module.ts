@@ -13,12 +13,13 @@ import * as redisStore from 'cache-manager-redis-store';
     ConfigModule.forRoot({ isGlobal: true }),
     CacheModule.registerAsync<RedisClientOptions>({
       imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => ({
+      useFactory: async (configService: ConfigService) => ({
         store: redisStore,
         host: configService.get<string>('REDIS_HOST'),
         port: parseInt(configService.get<string>('REDIS_PORT')),
-        isGlobal: true,
       }),
+      isGlobal: true,
+      inject: [ConfigService],
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],

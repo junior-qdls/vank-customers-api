@@ -14,6 +14,13 @@ export class CustomersService {
   ) {}
 
   public async create(createCustomerDto: CreateCustomerDto) {
+    const customer: Customer = await this.findCustomer(
+      createCustomerDto.tributaryId,
+    );
+    if (customer)
+      throw new Error(
+        `customer with ${createCustomerDto.tributaryId} already exists`,
+      );
     return this.customerRepository.save({
       ...createCustomerDto,
       bankRecords: createCustomerDto.bankRecords.map((item) => {
@@ -24,10 +31,10 @@ export class CustomersService {
     });
   }
 
-  async update(id: number, updateCustomerDto: UpdateCustomerDto) {
-    const customer: Customer = await this.customerRepository.findOne(id);
+  async update(id: string, updateCustomerDto: UpdateCustomerDto) {
+    const customer = await this.findCustomer(id);
     const { currency, tributaryId } = updateCustomerDto;
-    if (!customer) throw new Error(`customer ${id} not found`);
+    if (!customer) throw new Error(`customer with tributaryId ${id} not found`);
 
     customer.currency = currency ? currency : customer.currency;
     customer.tributaryId = tributaryId ? tributaryId : customer.tributaryId;
@@ -36,6 +43,14 @@ export class CustomersService {
   }
 
   async findCustomer(tributaryId: string) {
+    return this.customerRepository.findOne({
+      where: {
+        tributaryId: tributaryId,
+      },
+    });
+  }
+
+  async findCustomerFullInfo(tributaryId: string) {
     const customer: Customer = await this.customerRepository.findOne({
       relations: ['bankRecords'],
       where: {

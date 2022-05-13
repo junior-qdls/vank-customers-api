@@ -1,5 +1,5 @@
 import { CACHE_MANAGER, Inject, Injectable } from '@nestjs/common';
-import { catchError, from, map, Observable, of, switchMap, tap } from 'rxjs';
+import { catchError, from, Observable, of, tap, switchMap } from 'rxjs';
 import { Cache } from 'cache-manager';
 import { HttpService } from '@nestjs/axios';
 
@@ -11,7 +11,7 @@ export class ExchangeService {
   ) {}
   getExchangeRate(fr: string, to: string): Observable<number> {
     const key = `${fr}_${to}`;
-    return from(this.cacheManager.store.get(key)).pipe(
+    return from(this.cacheManager.get(key)).pipe(
       switchMap((val) => {
         console.log(`getting rate from cache key ${key} value ${val}`);
         if (val) return of(Number(val));
