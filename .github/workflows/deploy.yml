@@ -37,8 +37,7 @@ jobs:
         ECR_REPOSITORY: vank
         IMAGE_TAG: ${{ github.sha }}
       run: |
-        echo '::set-output name=IMAGE::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG'
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY
     
     - name: Update kube config
@@ -47,7 +46,7 @@ jobs:
     - name: Deploy image to EKS
       
       run: |
-        sed -i "s|_IMAGE_|${{ steps.docker-deploy.outputs.IMAGE}}|g" eks/deployment.yaml
+        sed -i "s|_IMAGE_|${{ steps.docker-deploy.ECR_REGISTRY}}\/${{ steps.docker-deploy.ECR_REPOSITORY}}:${{ steps.docker-deploy.IMAGE_TAG}}|g" eks/deployment.yaml
         kubectl apply -f eks/aws-auth.yaml
         kubectl apply -f eks/deployment.yaml
         kubectl apply -f eks/service.yaml
