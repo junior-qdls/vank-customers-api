@@ -3,13 +3,12 @@ import { CustomersService } from './customers.service';
 import { CustomersController } from './customers.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Customer } from './entities/customer.entity';
-import { InvoicesModule } from 'src/invoices/invoices.module';
 import { HttpModule } from '@nestjs/axios';
-import { ExchangeService } from './exchange.service';
 
 @Module({
-  imports: [HttpModule, TypeOrmModule.forFeature([Customer]), InvoicesModule],
+  imports: [HttpModule, TypeOrmModule.forFeature([Customer])],
   controllers: [CustomersController],
-  providers: [CustomersService, ExchangeService],
+  providers: [CustomersService],
+  exports: [CustomersService],
 })
 export class CustomersModule {}

@@ -1,42 +1,87 @@
 import { HttpModule } from '@nestjs/axios';
 import { Test, TestingModule } from '@nestjs/testing';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { from, map, switchMap, take, tap } from 'rxjs';
+import { getRepositoryToken } from '@nestjs/typeorm';
+import { from } from 'rxjs';
 import { Invoice } from './entities/invoice.entity';
 import { FileService } from './file.service';
 import { InvoicesService } from './invoices.service';
 
 describe('InvoicesService', () => {
   let service: InvoicesService;
-  let fileService: FileService;
+  const mockRepository = {
+    save: jest.fn().mockImplementation((dto: any) => {
+      return { ...dto };
+    }),
+  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [HttpModule],
-      providers: [FileService],
+      providers: [
+        {
+          provide: FileService,
+          useFactory: () => ({
+            fetchInvoiceData: () => {
+              return from([
+                {
+                  invoiceId: '112',
+                  vendorId: '37',
+                  invoiceNumber: '547481328',
+                  invoiceDate: '2014-05-20T05:00:00.000Z',
+                  invoiceTotal: '224',
+                  paymentTotal: '0',
+                  creditTotal: '0',
+                  bankId: '3',
+                  invoiceDueDate: '25-JUN-14',
+                  paymentDate: '',
+                  currency: 'EUR',
+                },
+                {
+                  invoiceId: '113',
+                  vendorId: '37',
+                  invoiceNumber: '547481328',
+                  invoiceDate: '2014-05-20T05:00:00.000Z',
+                  invoiceTotal: '224',
+                  paymentTotal: '0',
+                  creditTotal: '0',
+                  bankId: '3',
+                  invoiceDueDate: '25-JUN-14',
+                  paymentDate: '',
+                  currency: 'EUR',
+                },
+                {
+                  invoiceId: '114',
+                  vendorId: '37',
+                  invoiceNumber: '547481328',
+                  invoiceDate: '2014-05-20T05:00:00.000Z',
+                  invoiceTotal: '224',
+                  paymentTotal: '0',
+                  creditTotal: '0',
+                  bankId: '3',
+                  invoiceDueDate: '25-JUN-14',
+                  paymentDate: '',
+                  currency: 'EUR',
+                },
+              ]);
+            },
+          }),
+        },
+        InvoicesService,
+        {
+          provide: getRepositoryToken(Invoice),
+          useValue: mockRepository,
+        },
+      ],
     }).compile();
 
-    fileService = module.get<FileService>(FileService);
+    service = module.get<InvoicesService>(InvoicesService);
   });
 
-  it('should be defined', (done) => {
-    const d = fileService.fetchInvoiceData2().pipe((x) => console.log(x));
-    d.subscribe({
-      next: (v) => console.log('next'),
-      error: (e) => console.log('error', e),
-      complete: () => done(),
+  it('Test fetch invoices', (done) => {
+    service.syncInvoices().subscribe({
+      complete: done(),
     });
 
-    /*const arr = [];
-    arr.push({ data: 123 });
-    arr.push({ data: 444 });
-    arr.push({ data: 555 });
-    arr.push({ data: 666 });
-    arr.push({ data: 777 });
-    from(arr).subscribe({
-      next: (v) => console.log('next'),
-      error: (e) => console.log('error', e),
-      complete: () => done(),
-    });*/
+    expect(mockRepository.save).toHaveBeenCalledTimes(3);
   });
 });

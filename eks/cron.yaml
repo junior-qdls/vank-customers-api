@@ -1,0 +1,19 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: invoices-batch
+spec:
+  schedule: "0 0 * * FRI"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: invoices-batch
+            image: buildpack-deps:curl
+            imagePullPolicy: IfNotPresent
+            command:
+            - /bin/sh
+            - -ec
+            - curl -X POST a6ce6ec8faa964ff88cd66338f6a70bc-1364678839.us-east-1.elb.amazonaws.com/invoices/synchronizations
+          restartPolicy: OnFailure
