@@ -12,7 +12,9 @@ This app is running behind aws eks and build automated with Github Actions
 
 
 GITHUB WORKFLOW https://github.com/junior-qdls/vank-customers-api/blob/main/.github/workflows/deploy.yml
+
 THE DEPLOYMENT YAML https://github.com/junior-qdls/vank-customers-api/blob/main/eks/deployment.yaml
+
 THE CRON JOB TO RECOLLECT THE INVOICES IS FOUND HERE https://github.com/junior-qdls/vank-customers-api/blob/main/eks/cron.yaml
 
 ## CUSTOMER API
